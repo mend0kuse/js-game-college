@@ -1,26 +1,17 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useContext } from "react";
+import { ChooseMap } from "./components/ChooseMap";
+import { Game } from "./components/Game/Game";
+import { AppContext } from "./context/appContext";
 
-function App() {
+export function App() {
+  const { currentStep } = useContext(AppContext)
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app">
+      {currentStep === 'chooseMap' && <ChooseMap />}
+      {currentStep === 'game' && <Game />}
     </div>
   );
 }
 
-export default App;
+
