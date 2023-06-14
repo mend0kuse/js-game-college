@@ -21,7 +21,7 @@ export interface AppContextProps {
     setLives?: (monsters: number) => void
 
     pause?: boolean;
-    setPause?: (monsters: boolean) => void
+    setPause?: (pause: boolean) => void
 }
 
 export const AppContext = createContext<AppContextProps>({})

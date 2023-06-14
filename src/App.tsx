@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { ChooseMap } from "./components/ChooseMap";
-import { Game } from "./components/Game/Game";
+import { GameStep } from "./components/GameStep/GameStep";
 import { AppContext } from "./context/appContext";
 
 export function App() {
@@ -9,7 +9,7 @@ export function App() {
   return (
     <div className="app">
       {currentStep === 'chooseMap' && <ChooseMap />}
-      {currentStep === 'game' && <Game />}
+      {currentStep === 'game' && <GameStep />}
     </div>
   );
 }
