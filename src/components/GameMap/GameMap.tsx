@@ -24,9 +24,9 @@ export const GameMap = memo(() => {
 
     const checkCollision = () => {
         if (playerRef.current) {
-
             const playerPos = playerRef.current.getBoundingClientRect()
-            trapsRef.current?.childNodes.forEach((i, index) => {
+            
+            trapsRef.current?.childNodes.forEach((i) => {
                 const trap = (i as HTMLDivElement)
                 const trapPos = trap.getBoundingClientRect()
 
@@ -38,7 +38,7 @@ export const GameMap = memo(() => {
                 }
             })
 
-            monstersRef.current?.childNodes.forEach((i, index) => {
+            monstersRef.current?.childNodes.forEach((i) => {
                 const monster = (i as HTMLDivElement)
                 const monsterPos = monster.getBoundingClientRect()
 

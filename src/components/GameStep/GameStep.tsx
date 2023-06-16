@@ -13,7 +13,6 @@ export const GameStep = () => {
         }
     }, [setPause])
 
-
     useEffect(() => {
         window.addEventListener('keydown', pauseGame)
 

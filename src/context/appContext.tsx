@@ -22,6 +22,9 @@ export interface AppContextProps {
 
     pause?: boolean;
     setPause?: (pause: boolean) => void
+
+    currentMap?: number;
+    setCurrentMap?: React.Dispatch<React.SetStateAction<number>>
 }
 
 export const AppContext = createContext<AppContextProps>({ lives: 5 })
@@ -34,6 +37,7 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
     const [collectedMonsters, setCollectedMonsters] = useState(0);
     const [lives, setLives] = useState(5);
     const [pause, setPause] = useState(false);
+    const [currentMap, setCurrentMap] = useState(0);
 
     return (
         <AppContext.Provider value={{
@@ -43,7 +47,8 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
             collectedMonsters, setCollectedMonsters,
             currentStep, setCurrentStep,
             lives, setLives,
-            pause, setPause
+            pause, setPause,
+            currentMap, setCurrentMap
         }}>
             {children}
         </AppContext.Provider>

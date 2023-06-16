@@ -1,15 +1,15 @@
 import { useContext, useState } from 'react';
-import { AppContext } from '../context/appContext';
+import { Maps } from '../../const/maps';
+import { AppContext } from '../../context/appContext';
 import styles from './ChooseMap.module.scss';
-import { Modal } from './Modal/Modal';
+import { Modal } from './../Modal/Modal';
 
 export const ChooseMap = () => {
     const [usernameModal, setUsernameModal] = useState(false);
-    const [currentMap, setCurrentMap] = useState<null | number>(null)
-    const { username, setUsername, setCurrentStep } = useContext(AppContext)
+    const { username, setUsername, setCurrentStep, currentMap, setCurrentMap } = useContext(AppContext)
 
     const pickMap = (map: number) => {
-        setCurrentMap(map)
+        setCurrentMap?.(map)
         setUsernameModal(true)
     }
 
@@ -20,11 +20,12 @@ export const ChooseMap = () => {
     return (
         <>
             <div className={styles.inner}>
-                {new Array(16).fill(null).map((_, index) => (
+                {Maps.map((map, index) => (
                     <button onClick={() => pickMap(index + 1)} key={index} type='button' className={styles.map}>
-                        <p>Карта № {index + 1}</p>
+                        <img src={`/assets/${map.preview}`} />
                     </button>
                 ))}
+
             </div>
             <Modal open={usernameModal} setOpen={setUsernameModal}>
                 <div className={styles.start}>

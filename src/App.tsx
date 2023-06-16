@@ -1,5 +1,5 @@
 import { useContext, useEffect } from "react";
-import { ChooseMap } from "./components/ChooseMap";
+import { ChooseMap } from "./components/ChooseMap/ChooseMap";
 import { GameStep } from "./components/GameStep/GameStep";
 import { Stats } from "./components/Stats/Stats";
 import { AppContext } from "./context/appContext";
@@ -12,7 +12,6 @@ export function App() {
       setCurrentStep?.("stats")
     }
   }, [lives])
-
 
   return (
     <div className="app">

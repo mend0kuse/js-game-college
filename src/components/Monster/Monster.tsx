@@ -40,7 +40,7 @@ export const Monster: FC<MonsterProps> = (props) => {
     }, [move])
 
     return (
-        <div data-id={monster.id} className={cn(styles.monster, className)} style={{ left: pos.left, top: pos.top }} />
+        <img src={'/assets/monstr.jpg'} data-id={monster.id} className={cn(styles.monster, className)} style={{ left: pos.left, top: pos.top }} />
     )
 }
 
