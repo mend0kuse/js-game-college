@@ -2,7 +2,8 @@ import styles from './Monster.module.scss';
 
 import cn from 'classnames'
 import { IMonster } from '../../types/types';
-import { FC, MutableRefObject, useEffect, useMemo, useRef, useState } from 'react';
+import { FC, MutableRefObject, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { AppContext } from '../../context/appContext';
 
 interface MonsterProps {
     className: string;
@@ -20,6 +21,8 @@ interface Pos {
 export const Monster: FC<MonsterProps> = (props) => {
     const { className, monster } = props;
 
+    const { pause } = useContext(AppContext)
+
     const timerRef = useRef() as MutableRefObject<ReturnType<typeof setInterval>>;
 
     const [pos, setPos] = useState<Pos>({ left: monster.posX, top: monster.posY })
@@ -28,7 +31,9 @@ export const Monster: FC<MonsterProps> = (props) => {
     const changedValue = useMemo(() => values[Math.floor(Math.random() * 2)], [])
 
     const move = () => {
-        setPos({ ...pos, [changedDirection]: pos[changedDirection] + changedValue })
+        if (!pause) {
+            setPos({ ...pos, [changedDirection]: pos[changedDirection] + changedValue })
+        }
     }
 
     useEffect(() => {
