@@ -12,7 +12,7 @@ interface TrapProps {
 export const Trap: FC<TrapProps> = (props) => {
     const { className, trap } = props
     return (
-        <div className={cn(styles.trap, className)} style={{ left: trap.posX, top: trap.posY }} />
+        <div data-id={trap.id} className={cn(styles.trap, className)} style={{ left: trap.posX, top: trap.posY }} />
     )
 }
 
