@@ -1,23 +1,30 @@
 import { memo, MutableRefObject, useCallback, useContext, useEffect, useRef, useState, } from 'react';
+import _debounce from 'lodash/debounce'
 import { AppContext } from '../../context/appContext';
-import { ITrap } from '../../types/types';
+import { ITrap, IMonster } from '../../types/types';
 import { isCollision } from '../../utils/isCollision';
+import { Monster } from '../Monster/Monster';
 import { Trap } from '../Trap/Trap';
 import styles from './GameMap.module.scss';
+import { createTwoElements } from '../../utils/createTwoRadomPos';
 
 export const GameMap = memo(() => {
-    const { pause, setLives, setCollectedTraps } = useContext(AppContext)
+    const { pause, setLives, setCollectedTraps, setCollectedMonsters } = useContext(AppContext)
 
     const playerRef = useRef<null | HTMLDivElement>(null);
     const trapsRef = useRef<null | HTMLDivElement>(null);
+    const monstersRef = useRef<null | HTMLDivElement>(null);
     const mapRef = useRef<null | HTMLDivElement>(null);
 
     const [traps, setTraps] = useState<ITrap[]>([])
+    const [monsters, setMonsters] = useState<IMonster[]>([])
 
     const timerRef = useRef() as MutableRefObject<ReturnType<typeof setInterval>>;
+    const checkRef = useRef() as MutableRefObject<ReturnType<typeof setInterval>>;
 
     const checkCollision = () => {
         if (playerRef.current) {
+
             const playerPos = playerRef.current.getBoundingClientRect()
             trapsRef.current?.childNodes.forEach((i, index) => {
                 const trap = (i as HTMLDivElement)
@@ -28,6 +35,18 @@ export const GameMap = memo(() => {
                     setLives?.(prev => prev - 1)
                     setTraps(prev => prev.filter((i) => i.id !== id))
                     setCollectedTraps?.(prev => prev + 1)
+                }
+            })
+
+            monstersRef.current?.childNodes.forEach((i, index) => {
+                const monster = (i as HTMLDivElement)
+                const monsterPos = monster.getBoundingClientRect()
+
+                if (isCollision(playerPos, monsterPos)) {
+                    const id = Number(monster.dataset.id)
+                    setLives?.(prev => prev - 1)
+                    setMonsters(prev => prev.filter((i) => i.id !== id))
+                    setCollectedMonsters?.(prev => prev + 1)
                 }
             })
         }
@@ -67,34 +86,40 @@ export const GameMap = memo(() => {
 
             playerRef.current.style.left = currentLeft + 'px';
             playerRef.current.style.top = currentTop + 'px';
-            checkCollision()
         }
     }, [])
 
+
     const createTrap = () => {
-        const posx = (Math.random() * 1000).toFixed();
-        const posy = (Math.random() * 800).toFixed();
-        const newTrap = { id: Date.now(), posX: Number(posx), posY: Number(posy) }
-        setTraps(prev => [...prev, newTrap])
-        checkCollision()
+        setTraps(prev => [...prev, ...createTwoElements()])
+    }
+
+    const createMonsters = () => {
+        setMonsters(prev => [...prev, ...createTwoElements()])
     }
 
     useEffect(() => {
         if (pause) {
             clearInterval(timerRef.current)
+            clearInterval(checkRef.current)
             window.removeEventListener('keydown', playerMove)
 
         } else {
-            if (!timerRef.current) {
-                timerRef.current = setInterval(() => {
-                    createTrap()
-                }, 3000)
-            }
+            timerRef.current = setInterval(() => {
+                createTrap()
+                createMonsters()
+            }, 3000)
+
+            checkRef.current = setInterval(() => {
+                checkCollision()
+            }, 10)
 
             window.addEventListener('keydown', playerMove)
         }
 
         return () => {
+            clearInterval(timerRef.current)
+            clearInterval(checkRef.current)
             window.removeEventListener('keydown', playerMove)
         }
     }, [pause, playerMove])
@@ -103,6 +128,9 @@ export const GameMap = memo(() => {
         <div className={styles.wrapper} ref={mapRef}>
             <div ref={trapsRef} className={styles.traps}>
                 {traps.map((i) => (<Trap trap={i} className={styles.trap} key={i.id} />))}
+            </div>
+            <div ref={monstersRef} className={styles.monsters}>
+                {monsters.map((i) => (<Monster monster={i} className={styles.monster} key={i.id} />))}
             </div>
             <div ref={playerRef} style={{ left: 0, top: 0 }} className={styles.player} />
         </div>

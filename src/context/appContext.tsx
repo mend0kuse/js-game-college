@@ -11,11 +11,11 @@ export interface AppContextProps {
     aliveTime?: number;
     setAliveTime?: React.Dispatch<React.SetStateAction<number>>
 
-    collectedtraps?: number;
+    collectedTraps?: number;
     setCollectedTraps?: React.Dispatch<React.SetStateAction<number>>
 
-    monsters?: number;
-    setMonsters?: (monsters: number) => void
+    collectedMonsters?: number;
+    setCollectedMonsters?: React.Dispatch<React.SetStateAction<number>>
 
     lives: number;
     setLives?: React.Dispatch<React.SetStateAction<number>>
@@ -30,8 +30,8 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
     const [username, setUsername] = useState('');
     const [currentStep, setCurrentStep] = useState<Step>('chooseMap');
     const [aliveTime, setAliveTime] = useState(0);
-    const [collectedtraps, setCollectedTraps] = useState(0);
-    const [monsters, setMonsters] = useState(0);
+    const [collectedTraps, setCollectedTraps] = useState(0);
+    const [collectedMonsters, setCollectedMonsters] = useState(0);
     const [lives, setLives] = useState(5);
     const [pause, setPause] = useState(false);
 
@@ -39,8 +39,8 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
         <AppContext.Provider value={{
             username, setUsername,
             aliveTime, setAliveTime,
-            collectedtraps, setCollectedTraps,
-            monsters, setMonsters,
+            collectedTraps, setCollectedTraps,
+            collectedMonsters, setCollectedMonsters,
             currentStep, setCurrentStep,
             lives, setLives,
             pause, setPause

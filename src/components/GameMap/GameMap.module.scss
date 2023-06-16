@@ -15,12 +15,14 @@
     background-color: black;
 }
 
-.traps {
+.traps,
+.monsters {
     height: 100%;
     height: 100%;
     position: relative;
 }
 
-.trap {
+.trap,
+.monster {
     position: absolute;
 }
