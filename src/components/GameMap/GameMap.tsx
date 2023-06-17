@@ -64,29 +64,31 @@ export const GameMap = memo(() => {
 
     const playerMove = useCallback((e: KeyboardEvent) => {
         if (playerRef.current) {
-            let currentLeft = Number(playerRef.current.style.left.split('px')[0])
-            let currentTop = Number(playerRef.current.style.top.split('px')[0])
+            const initialLeft = Number(playerRef.current.style.left.split('px')[0])
+            const initialTop = Number(playerRef.current.style.top.split('px')[0])
+
+            let newLeft = initialLeft
+            let newTop = initialTop
 
             switch (e.code) {
                 case 'ArrowRight':
-                    if (currentLeft < 970) {
-                        currentLeft += 5
+                    if (initialLeft < 970) {
+                        newLeft += 6
                     }
                     break;
                 case 'ArrowDown':
-                    if (currentTop < 770) {
-                        currentTop += 5
+                    if (initialTop < 770) {
+                        newTop += 6
                     }
                     break;
                 case 'ArrowLeft':
-                    if (currentLeft > 0) {
-                        currentLeft -= 5
-
+                    if (initialLeft > 0) {
+                        newLeft -= 6
                     }
                     break;
                 case 'ArrowUp':
-                    if (currentTop > 0) {
-                        currentTop -= 5
+                    if (initialTop > 0) {
+                        newTop -= 6
                     }
                     break;
 
@@ -94,6 +96,25 @@ export const GameMap = memo(() => {
                     break;
             }
 
+            playerRef.current.style.left = newLeft + 'px'
+            playerRef.current.style.top = newTop + 'px'
+
+            const playerPos = playerRef.current.getBoundingClientRect()
+
+            wallsRef.current?.childNodes.forEach((i) => {
+                const wall = (i as HTMLDivElement)
+                const wallPos = wall.getBoundingClientRect()
+
+                if (isCollision(playerPos, wallPos)) {
+                    setTimeout(() => {
+                        if (playerRef.current) {
+                            playerRef.current.style.left = initialLeft + 'px'
+                            playerRef.current.style.top = initialTop + 'px'
+                        }
+                    }, 10)
+
+                }
+            })
         }
     }, [])
 
