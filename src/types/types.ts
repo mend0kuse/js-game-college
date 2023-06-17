@@ -17,6 +17,7 @@ export interface IMap {
     id: number;
     preview: string;
     walls: IWall[]
+    finish: IWall
 }
 
 export interface IWall {

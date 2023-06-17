@@ -1,11 +1,10 @@
 .wrapper {
     width: 1000px;
     height: 800px;
-    border: 1px solid black;
+    border: 1px dashed black;
     position: relative;
     display: flex;
     gap: 5px;
-    overflow: hidden;
 }
 
 .player {
@@ -16,13 +15,26 @@
 }
 
 .traps,
-.monsters {
+.monsters,
+.walls {
+    overflow: hidden;
+    width: 100%;
     height: 100%;
-    height: 100%;
-    position: relative;
+    position: absolute;
 }
 
 .trap,
-.monster {
+.monster,
+.finish,
+.wall {
     position: absolute;
+}
+
+.finish {
+    background-color: white;
+    z-index: 1000;
+}
+
+.wall {
+    background: red;
 }

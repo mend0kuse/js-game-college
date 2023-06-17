@@ -1,5 +1,4 @@
 import { memo, MutableRefObject, useCallback, useContext, useEffect, useRef, useState, } from 'react';
-import _debounce from 'lodash/debounce'
 import { AppContext } from '../../context/appContext';
 import { ITrap, IMonster } from '../../types/types';
 import { isCollision } from '../../utils/isCollision';
@@ -9,12 +8,14 @@ import styles from './GameMap.module.scss';
 import { createTwoElements } from '../../utils/createTwoRadomPos';
 
 export const GameMap = memo(() => {
-    const { pause, setLives, setCollectedTraps, setCollectedMonsters } = useContext(AppContext)
+    const { pause, setLives, setCollectedTraps, setCollectedMonsters, setCurrentStep, setIsWin, currentMap } = useContext(AppContext)
 
     const playerRef = useRef<null | HTMLDivElement>(null);
     const trapsRef = useRef<null | HTMLDivElement>(null);
     const monstersRef = useRef<null | HTMLDivElement>(null);
     const mapRef = useRef<null | HTMLDivElement>(null);
+    const finishRef = useRef<null | HTMLDivElement>(null);
+    const wallsRef = useRef<null | HTMLDivElement>(null);
 
     const [traps, setTraps] = useState<ITrap[]>([])
     const [monsters, setMonsters] = useState<IMonster[]>([])
@@ -22,10 +23,10 @@ export const GameMap = memo(() => {
     const timerRef = useRef() as MutableRefObject<ReturnType<typeof setInterval>>;
     const checkRef = useRef() as MutableRefObject<ReturnType<typeof setInterval>>;
 
-    const checkCollision = () => {
+    const checkCollision = useCallback(() => {
         if (playerRef.current) {
             const playerPos = playerRef.current.getBoundingClientRect()
-            
+
             trapsRef.current?.childNodes.forEach((i) => {
                 const trap = (i as HTMLDivElement)
                 const trapPos = trap.getBoundingClientRect()
@@ -49,8 +50,17 @@ export const GameMap = memo(() => {
                     setCollectedMonsters?.(prev => prev + 1)
                 }
             })
+
+            if (finishRef.current) {
+                const finishPos = finishRef.current.getBoundingClientRect()
+                if (isCollision(playerPos, finishPos)) {
+                    setIsWin?.(true);
+                    setCurrentStep?.('stats')
+                }
+            }
+
         }
-    }
+    }, [setCollectedMonsters, setCollectedTraps, setCurrentStep, setIsWin, setLives])
 
     const playerMove = useCallback((e: KeyboardEvent) => {
         if (playerRef.current) {
@@ -84,8 +94,6 @@ export const GameMap = memo(() => {
                     break;
             }
 
-            playerRef.current.style.left = currentLeft + 'px';
-            playerRef.current.style.top = currentTop + 'px';
         }
     }, [])
 
@@ -112,7 +120,7 @@ export const GameMap = memo(() => {
 
             checkRef.current = setInterval(() => {
                 checkCollision()
-            }, 10)
+            }, 5)
 
             window.addEventListener('keydown', playerMove)
         }
@@ -122,7 +130,7 @@ export const GameMap = memo(() => {
             clearInterval(checkRef.current)
             window.removeEventListener('keydown', playerMove)
         }
-    }, [pause, playerMove])
+    }, [checkCollision, pause, playerMove])
 
     return (
         <div className={styles.wrapper} ref={mapRef}>
@@ -133,6 +141,10 @@ export const GameMap = memo(() => {
                 {monsters.map((i) => (<Monster monster={i} className={styles.monster} key={i.id} />))}
             </div>
             <div ref={playerRef} style={{ left: 0, top: 0 }} className={styles.player} />
+            <div ref={wallsRef} className={styles.walls}>
+                {currentMap?.walls.map((properties, index) => (<div key={index} style={{ ...properties }} className={styles.wall} />))}
+            </div>
+            <div ref={finishRef} className={styles.finish} style={{ ...currentMap?.finish }} />
         </div>
     )
 })

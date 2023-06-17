@@ -1,5 +1,5 @@
 import { createContext, ReactNode, useState } from "react";
-import { Step } from "../types/types";
+import { IMap, Step } from "../types/types";
 
 export interface AppContextProps {
     currentStep?: Step
@@ -23,8 +23,11 @@ export interface AppContextProps {
     pause?: boolean;
     setPause?: (pause: boolean) => void
 
-    currentMap?: number;
-    setCurrentMap?: React.Dispatch<React.SetStateAction<number>>
+    currentMap?: IMap;
+    setCurrentMap?: React.Dispatch<React.SetStateAction<IMap | undefined>>
+
+    isWin?: boolean
+    setIsWin?: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export const AppContext = createContext<AppContextProps>({ lives: 5 })
@@ -37,7 +40,8 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
     const [collectedMonsters, setCollectedMonsters] = useState(0);
     const [lives, setLives] = useState(5);
     const [pause, setPause] = useState(false);
-    const [currentMap, setCurrentMap] = useState(0);
+    const [currentMap, setCurrentMap] = useState<IMap>();
+    const [isWin, setIsWin] = useState(false);
 
     return (
         <AppContext.Provider value={{
@@ -48,7 +52,8 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
             currentStep, setCurrentStep,
             lives, setLives,
             pause, setPause,
-            currentMap, setCurrentMap
+            currentMap, setCurrentMap,
+            isWin, setIsWin
         }}>
             {children}
         </AppContext.Provider>
