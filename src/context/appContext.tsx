@@ -21,7 +21,7 @@ export interface AppContextProps {
     setLives?: React.Dispatch<React.SetStateAction<number>>
 
     pause?: boolean;
-    setPause?: (pause: boolean) => void
+    setPause?: React.Dispatch<React.SetStateAction<boolean>>
 
     currentMap?: IMap;
     setCurrentMap?: React.Dispatch<React.SetStateAction<IMap | undefined>>

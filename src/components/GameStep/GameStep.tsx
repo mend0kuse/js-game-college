@@ -9,7 +9,7 @@ export const GameStep = () => {
 
     const pauseGame = useCallback((e: KeyboardEvent) => {
         if (e.code === 'Escape') {
-            setPause?.(true)
+            setPause?.(prev => !prev)
         }
     }, [setPause])
 
